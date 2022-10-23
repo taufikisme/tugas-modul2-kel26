@@ -1,23 +1,32 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
+import { onKeyUpFunc } from './utils/helper';
+import Card from './components/Card';
 
 function App() {
+  const [mahasiswa, setMahasiswa] = useState(null);
+  const [keyword, setKeyword] = useState('');
+
+  const onKeyUpHandler = (event) => {
+    setKeyword(event.target.value);
+    setMahasiswa(onKeyUpFunc(event));
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container">
+      <input
+        onKeyUp={(event) => onKeyUpHandler(event)}
+        type="text"
+        placeholder="Cari!"
+      />
+      <div id="result">
+        {mahasiswa === null && <p>Harap masukkan kata kunci</p>}
+        {mahasiswa !== null && mahasiswa.length === 0 && (
+          <p>{`Hasil pencarian untuk kata kunci "${keyword}" tidak ditemukan`}</p>
+        )}
+        {mahasiswa &&
+          mahasiswa.length > 0 &&
+          mahasiswa.map((item, i) => <Card key={i} {...item} />)}
+      </div>
     </div>
   );
 }
